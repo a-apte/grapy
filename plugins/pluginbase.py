@@ -14,6 +14,11 @@ class PluginBase(object):
 
     config = {}
 
+    COLOR_WHITE = 'wit'
+    COLOR_RED = 'rood'
+    COLOR_ROSE = 'rose'
+    COLOR_UNKNOWN = 'anders'
+
     def set_config(self, config):
         logger.info('[{}] Setting plugin config\n{}'.format(
             __name__,

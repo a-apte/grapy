@@ -25,6 +25,7 @@ router.register(r'groups', views.GroupViewSet)
 router.register(r'countries', views.CountryViewSet)
 router.register(r'vendors', views.VendorViewSet)
 router.register(r'raters', views.RaterViewSet)
+router.register(r'wines', views.WineViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +33,5 @@ urlpatterns = [
     url(r'^api-auth/', include(
         'rest_framework.urls',
         namespace='rest_framework')),
-    url(r'^wines/$', views.WineList.as_view()),
-    url(r'^wines/(?P<pk>[0-9]+)/$', views.WineDetail.as_view()),
+    url(r'^wines/(?P<pk>[0-9]+)/$', views.WineViewSet),
 ]

@@ -1,9 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from rest_framework import status
 from rest_framework import generics
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from wines.models import Country, Vendor, Rater, Wine
 from wines.serializers import (UserSerializer, GroupSerializer,
                                CountrySerializer,
@@ -13,7 +10,7 @@ from wines.serializers import (UserSerializer, GroupSerializer,
                                )
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -21,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -29,7 +26,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-class CountryViewSet(viewsets.ModelViewSet):
+class CountryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -37,7 +34,7 @@ class CountryViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
 
 
-class VendorViewSet(viewsets.ModelViewSet):
+class VendorViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -45,7 +42,7 @@ class VendorViewSet(viewsets.ModelViewSet):
     serializer_class = VendorSerializer
 
 
-class RaterViewSet(viewsets.ModelViewSet):
+class RaterViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -53,7 +50,7 @@ class RaterViewSet(viewsets.ModelViewSet):
     serializer_class = RaterSerializer
 
 
-class WineList(generics.ListCreateAPIView):
+class WineViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -61,9 +58,9 @@ class WineList(generics.ListCreateAPIView):
     serializer_class = WineSerializer
 
 
-class WineDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Wine.objects.all()
-    serializer_class = WineSerializer
+#class WineDetail(generics.RetrieveUpdateDestroyAPIView):
+#    """
+#    API endpoint that allows groups to be viewed or edited.
+#    """
+#    queryset = Wine.objects.all()
+#    serializer_class = WineSerializer

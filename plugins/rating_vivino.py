@@ -84,7 +84,8 @@ class Vivino(pluginbase.PluginBase):
     def build_uri(self, product_id, title):
         logger.info('Scrape rating for {}'.format(title))
 
-        # TODO: remove other special characters: ' é
+        # TODO: remove other special characters: ' é #
+        # 94 wines
         param = title.replace(' ', '+')
 
         page_uri = self.config['page'].format(param)

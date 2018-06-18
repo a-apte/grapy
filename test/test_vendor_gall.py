@@ -61,3 +61,50 @@ class VendorGallTestCase(unittest.TestCase):
 
         for k, v in urls.items():
             self.assertEqual(self.plugin.get_volume(k), v)
+
+    def test_color(self):
+        """Colors are correctly obtained from category"""
+        cat = {
+            'Mousserend / Overig': 'Overig',
+            'Port, sherry / Port': 'Overig',
+            'Wijn': 'Overig',
+            'Wijn / Dessertwijn': 'Overig',
+            'Wijn / Rode wijn': 'Rood',
+            'Wijn / Rode wijn / Fruitig rood': 'Rood',
+            'Wijn / Rode wijn / Soepel rood': 'Rood',
+            'Wijn / Rode wijn / Stevig rood': 'Rood',
+            'Wijn / Rosé': 'Rose',
+            'Wijn / Witte wijn': 'Wit',
+            'Wijn / Witte wijn / Fris wit': 'Wit',
+            'Wijn / Witte wijn / Fruitig wit': 'Wit',
+            'Wijn / Witte wijn / Vol wit': 'Wit',
+            'not-a-volume': 'Overig',
+            '': 'Overig',
+        }
+
+        for k, v in cat.items():
+            self.assertEqual(self.plugin.get_color(k), v)
+
+    def test_type(self):
+        """Colors are correctly obtained from category"""
+        cat = {
+            'Mousserend / Overig': 'Mousserend',
+            'Port, sherry / Port': 'Port',
+            'Wijn': 'Wijn',
+            'Wijn / Dessertwijn': 'Dessertwijn',
+            'Wijn / Rode wijn': 'Wijn',
+            'Wijn / Rode wijn / Fruitig rood': 'Wijn',
+            'Wijn / Rode wijn / Soepel rood': 'Wijn',
+            'Wijn / Rode wijn / Stevig rood': 'Wijn',
+            'Wijn / Rosé': 'Wijn',
+            'Wijn / Witte wijn': 'Wijn',
+            'Wijn / Witte wijn / Fris wit': 'Wijn',
+            'Wijn / Witte wijn / Fruitig wit': 'Wijn',
+            'Wijn / Witte wijn / Vol wit': 'Wijn',
+            'not-a-volume': 'Overig',
+            '': 'Overig',
+        }
+
+        for k, v in cat.items():
+            self.assertEqual(self.plugin.get_type(k), v)
+

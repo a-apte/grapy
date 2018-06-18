@@ -34,19 +34,10 @@ class Nobel(pluginbase.PluginBase):
         """ The function to scrape the product item """
         logger.debug('Get product from element\n{}'.format(elt))
 
-#        product = {
-#            'vendor_id': self.config['vendor_id'],
-#            'url': 'unknown',
-#            'title': 'unknown',
-#            'code': 'unknown',
-#            'quantity': 1,
-#            'volume': 0.75,
-#            'price': 0.00
-#        }
         product = self.get_base_product()
 
         product_desc = {
-#            'type': 'pa_wijntype',
+            'type': 'pa_wijntype',
             'color': 'pa_color',
 #            'country': 'pa_herkomst',
 #            'region': 'pa_streek',
@@ -80,6 +71,7 @@ class Nobel(pluginbase.PluginBase):
         # Fix some unusually formatted fields
         product['volume'] = self.get_volume(product['volume'])
         product['title'] = self.get_title(product['title'])
+        product['color'] = 'Rosé' if product['color'] == 'roze' else product['color'].title()
 
         self.config['callback'](product)
 

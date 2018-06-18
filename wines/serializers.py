@@ -67,4 +67,5 @@ class WineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wine
         fields = (
-            'id', 'name', 'winery', 'region', 'country', 'ratings', 'vendors')
+            'id', 'name', 'winetype', 'color', 'winery', 'region', 'country',
+            'ratings', 'vendors')

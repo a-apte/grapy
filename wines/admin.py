@@ -10,14 +10,15 @@ admin.site.register(Country, CountryAdmin)
 
 
 class VendorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'is_active', 'plugin', 'max_pages', )
+    list_display = ('name', 'url', 'is_active', 'is_test', 'plugin',
+                    'max_pages', )
 
 
 admin.site.register(Vendor, VendorAdmin)
 
 
 class RaterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'is_active', )
+    list_display = ('name', 'url', 'is_active', 'is_test', 'plugin', 'limit', )
 
 
 admin.site.register(Rater, RaterAdmin)
@@ -39,7 +40,7 @@ class WineAdmin(admin.ModelAdmin):
     list_display = ('name', 'color', 'winetype', 'country', 'region',
                     'winery', 'min_rating', 'min_price', 'modified',)
 
-    list_filter = ['country', 'color', ]
+    list_filter = ['country', 'color', 'winetype', ]
     search_fields = ['name', 'winetype']
     readonly_fields = ('min_price', 'min_rating', 'modified',)
     inlines = [VendorWineInline, WineRatingInline]
