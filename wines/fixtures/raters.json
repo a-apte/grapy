@@ -1,0 +1,1 @@
+[{"model": "wines.rater", "pk": 1, "fields": {"name": "Vivino", "url": "https://www.vivino.com", "is_active": true, "is_test": false, "plugin": "rating_vivino.py", "page": "/search/wines?q={}", "limit": 100}}]
