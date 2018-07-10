@@ -21,23 +21,10 @@ class WineScraper(scraper.Scraper):
             logger.warning('Unknown country: {}'.format(name))
         return country
 
-#    def get_style(self, name):
-#        style, created = models.WineStyle.objects.get_or_create(name=name)
-#        logger.info('Style {}'.format(style))
-#        if style is None:
-#            logger.warning('Unknown style: {}'.format(name))
-#        return style
-
     def persist(self):
         for rating in self.rating_list:
 
             logger.info('Persisting product: {}'.format(rating))
-
-#            style = None
-#            try:
-#                style = self.get_style(rating['regionale stijlen'])
-#            except KeyError as e:
-#                pass
 
             wine, created = models.Wine.objects.update_or_create(
                 url=rating['url'],
@@ -46,7 +33,6 @@ class WineScraper(scraper.Scraper):
                     'country': self.get_country(rating['country']),
                     'region': rating['region'],
                     'winery': rating['winery'],
-#                    'style': style,
                 },
             )
 
