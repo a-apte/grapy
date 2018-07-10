@@ -26,34 +26,22 @@ class VendorScraper(scraper.Scraper):
                 pformat(product)))
 
             try:
-                # Get or create the wine
-                wine, created = models.Wine.objects.get_or_create(
-                    name=product['title'],
-                )
-                logger.info('[{}] {} wine: {}'.format(
-                    vendor.name,
-                    'Created' if created else 'Updated',
-                    wine.name))
-
-                # Update product properties
-                wine.winetype = product['type']
-                wine.color = product['color']
-                wine.save()
-
-                # Add / update vendor details
-                vendorwine, created = models.VendorWine.objects.get_or_create(
+                wine, created = models.VendorWine.objects.update_or_create(
                     vendor=vendor,
-                    wine=wine,
-                    vendor_code=product['code'],
-                    volume=product['volume'],
-                    quantity=product['quantity'],
-                    price=product['price'],
-                    url=product['url']
+                    url=product['url'],
+                    defaults={
+                        'vendor_code': product['code'],
+                        'title': product['title'],
+                        'volume': product['volume'],
+                        'quantity': product['quantity'],
+                        'price': product['price']
+                    },
                 )
+
                 logger.info('[{}] {} vendorwine: {}'.format(
                     vendor.name,
                     'Created' if created else 'Updated',
-                    wine.name))
+                    wine.title))
             except KeyError as e:
                 logger.error('KeyError creating {}: {}, see {}'.format(
                     product['title'],
@@ -69,8 +57,6 @@ class VendorScraper(scraper.Scraper):
                     product['title'],
                     e,
                     product['url']))
-
-        self.product_list = []
 
     def is_valid(self, vendor, product):
         """ Validates a product """
@@ -90,9 +76,6 @@ class VendorScraper(scraper.Scraper):
                     vendor.name,
                     vendor.stopwords))
 
-        # TODO: check if all mandatory fields are provided
-        if product['code'] is None or product['code'] == 'unknown':
-            valid = False
         return valid
 
     def add(self, product):
@@ -121,6 +104,8 @@ class VendorScraper(scraper.Scraper):
         logger.debug(plugins.vendor_plugins)
 
         for vendor in models.Vendor.active.all():
+            self.product_list = []
+
             logger.info('[{}] Loading config...'.format(
                 vendor.name))
 
@@ -148,7 +133,7 @@ class VendorScraper(scraper.Scraper):
                 self.persist()
             else:
                 path = 'products_{}.csv'.format(vendor.name)
-                scraper.to_csv(path, self.product_list)
+                scraper.Scraper.to_csv(path, self.product_list)
                 logger.info('[{}] Test mode: products saved to file {}'.format(
                     vendor.name,
                     path))

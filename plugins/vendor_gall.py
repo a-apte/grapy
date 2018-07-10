@@ -32,9 +32,9 @@ class Gall(pluginbase.PluginBase):
             volume = 6
         return volume
 
-    def get_title(self, title):
-        expr = re.compile(r'\d{1,3}\s?cl|Magnum|2X75CL|37.5CL|37,5cl', re.I)
-        return re.sub(expr, '', title).strip()
+#    def get_title(self, title):
+#        expr = re.compile(r'\d{1,3}\s?cl|Magnum|2X75CL|37.5CL|37,5cl', re.I)
+#        return re.sub(expr, '', title).strip()
 
     def get_quantity(self, url):
         # TODO: do it nicely with regex
@@ -45,45 +45,39 @@ class Gall(pluginbase.PluginBase):
             quantity = 6
         return quantity
 
-    def get_color(self, category):
-        color = 'Overig'
-        if re.search('rood|rode', category, flags=re.I) is not None:
-            color = 'Rood'
-        elif re.search('wit', category, flags=re.I) is not None:
-            color = 'Wit'
-        elif re.search('rosé|rose', category, flags=re.I) is not None:
-            color = 'Rosé'
-        return color
+#    def get_color(self, category):
+#        color = 'Overig'
+#        if re.search('rood|rode', category, flags=re.I) is not None:
+#            color = 'Rood'
+#        elif re.search('wit', category, flags=re.I) is not None:
+#            color = 'Wit'
+#        elif re.search('rosé|rose', category, flags=re.I) is not None:
+#            color = 'Rosé'
+#        return color
 
-    def get_type(self, category):
-        res = 'Overig'
-        if re.search('dessert', category, flags=re.I) is not None:
-            res = 'Dessertwijn'
-        elif re.search('mousserend', category, flags=re.I) is not None:
-            res = 'Mousserend'
-        elif re.search('port', category, flags=re.I) is not None:
-            res = 'Port'
-        elif re.search('wijn', category, flags=re.I) is not None:
-            res = 'Wijn'
-        return res
+#    def get_type(self, category):
+#        res = 'Overig'
+#        if re.search('dessert', category, flags=re.I) is not None:
+#            res = 'Dessertwijn'
+#        elif re.search('mousserend', category, flags=re.I) is not None:
+#            res = 'Mousserend'
+#        elif re.search('port', category, flags=re.I) is not None:
+#            res = 'Port'
+#        elif re.search('wijn', category, flags=re.I) is not None:
+#            res = 'Wijn'
+#        return res
 
     def scrape_product(self, elt):
         """ The function to scrape the product item """
         logger.debug('Get product from element\n{}'.format(elt))
 
-#        product = {
-#            'vendor_id': self.config['vendor_id'],
-#            'quantity': 1,
-#            'volume': 0.75,
-#            'price': 0.00
-#        }
         product = self.get_base_product()
 
         product_desc = {
             'price': 'price',
             'title': 'name',
             'code': 'id',
-            'category': 'category',
+#            'category': 'category',
 #            'type': 'category',
         }
 
@@ -118,9 +112,9 @@ class Gall(pluginbase.PluginBase):
             logger.error(e)
             pass
 
-        product['color'] = self.get_color(product['category'])
-        product['type'] = self.get_type(product['category'])
-        product['title'] = self.get_title(product['title'])
+#        product['color'] = self.get_color(product['category'])
+#        product['winetype'] = self.get_type(product['category'])
+#        product['title'] = self.get_title(product['title'])
         product['volume'] = self.get_volume(product['url'])
         product['quantity'] = self.get_quantity(product['url'])
 

@@ -4,6 +4,11 @@ import logging
 #import sys
 from bs4 import BeautifulSoup
 from pprint import pformat
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +36,8 @@ class PluginBase(object):
             'code': -1,
             'title': '-',
             'url': '-',
-            'color': '-',
+#            'winetype': '-',
+#            'color': '-',
             'quantity': 1,
             'volume': 0.75,
             'price': 0.00,
@@ -45,7 +51,9 @@ class PluginBase(object):
             'winery': 'unknown',
             'region': 'unknown',
             'country': 'unknown',
-            'url': self.config['base_url'],
+#            'url': self.config['base_url'],
+            'url': '',
+#            'keywords': '',
             'rating': 0,
             'num_ratings': 0,
         }
@@ -110,6 +118,32 @@ class PluginBase(object):
             logger.error('Request error: {}'.format(pformat(e)))
         except KeyboardInterrupt:
             logger.error('Keyboard interrupt')
+        except Exception as e:
+            logger.error('Unknown error: {}'.format(pformat(e)))
+
+        return soup
+
+    def scrape_detailpage(self, uri):
+        """ Scrape page """
+        logger.info('Scraping detail page {}'.format(uri))
+
+        soup = None
+        try:
+#            chrome_options = Options()  
+#            chrome_options.add_argument("--headless")  
+#            chrome_options.binary_location = '/Applications/Google Chrome   Canary.app/Contents/MacOS/Google Chrome Canary'  
+#            driver = webdriver.Chrome(
+#                executable_path=os.path.abspath('chromedriver'),
+#                chrome_options=chrome_options)
+            chrome_options = Options()  
+            chrome_options.add_argument('--headless')
+#            browser = webdriver.Chrome("./chromedriver")
+            browser = webdriver.Chrome(
+                executable_path='./chromedriver',
+                chrome_options=chrome_options)
+            browser.get(uri)
+            soup = BeautifulSoup(browser.page_source, 'html.parser')
+            browser.close()
         except Exception as e:
             logger.error('Unknown error: {}'.format(pformat(e)))
 

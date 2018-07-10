@@ -13,8 +13,6 @@ class Nobel(pluginbase.PluginBase):
     locale.setlocale(locale.LC_ALL, 'nl')
 
     def get_volume(self, volume):
-        # TODO: netter via regex
-        # drop last []-[]-[]
         if volume == '0-75-l':
             return 0.75
         elif volume == '0-375-l':
@@ -26,10 +24,6 @@ class Nobel(pluginbase.PluginBase):
         else:
             return 0.75
 
-    def get_title(self, title):
-        # drop certain words from beginning or end of title
-        return re.sub('(\s0.375$|\sMagnum$|^Tip!\s)', '', title)
-
     def scrape_product(self, elt):
         """ The function to scrape the product item """
         logger.debug('Get product from element\n{}'.format(elt))
@@ -37,7 +31,7 @@ class Nobel(pluginbase.PluginBase):
         product = self.get_base_product()
 
         product_desc = {
-            'type': 'pa_wijntype',
+            'winetype': 'pa_wijntype',
             'color': 'pa_color',
 #            'country': 'pa_herkomst',
 #            'region': 'pa_streek',
@@ -68,10 +62,7 @@ class Nobel(pluginbase.PluginBase):
             # the last price
             product['price'] = locale.atof(price[-1].get_text()[2:])
 
-        # Fix some unusually formatted fields
         product['volume'] = self.get_volume(product['volume'])
-        product['title'] = self.get_title(product['title'])
-        product['color'] = 'Rosé' if product['color'] == 'roze' else product['color'].title()
 
         self.config['callback'](product)
 

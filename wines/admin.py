@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Country, Vendor, Wine, VendorWine, Rater, WineRating
+from .models import (
+    Country, Vendor, Wine, VendorWine, Rater, WineRating, WineStyle, Grape
+)
 
 
 class CountryAdmin(admin.ModelAdmin):
@@ -30,6 +32,17 @@ class WineRatingInline(admin.TabularInline):
     readonly_fields = ('rater', 'rating', 'num_ratings',)
 
 
+class VendorWineAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'vendor_code', 'vendor', 'wine', 'volume',
+                    'quantity', 'price', 'url', 'modified', )
+    list_filter = ['vendor', 'volume', ]
+    search_fields = ['title', 'url', ]
+    readonly_fields = ('price_per_75cl', 'modified',)
+
+
+admin.site.register(VendorWine, VendorWineAdmin)
+
+
 class VendorWineInline(admin.TabularInline):
     model = VendorWine
     extra = 0
@@ -37,13 +50,15 @@ class VendorWineInline(admin.TabularInline):
 
 
 class WineAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'winetype', 'country', 'region',
+    list_display = ('id', 'name', 'color', 'style', 'country', 'region',
                     'winery', 'min_rating', 'min_price', 'modified',)
 
-    list_filter = ['country', 'color', 'winetype', ]
-    search_fields = ['name', 'winetype']
-    readonly_fields = ('min_price', 'min_rating', 'modified',)
+    list_filter = ['country', 'grapes', 'style', ]
+    search_fields = ['name', 'grapes', 'style', ]
+    readonly_fields = ('id', 'color', 'min_price', 'min_rating', 'modified',)
     inlines = [VendorWineInline, WineRatingInline]
 
 
 admin.site.register(Wine, WineAdmin)
+admin.site.register(WineStyle)
+admin.site.register(Grape)

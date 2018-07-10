@@ -14,7 +14,7 @@ Based on Django DRF
     plugins/            all the vendor and rating plugins
     scraper/            code that runs the scraping plugins
     test/               unit tests
-    wines/              the Django model description
+    wines/              the Django 'wines' app description
     wines/fixtures/     initial model data with countries, vendors and raters
     wines/migrations/   Django migration files to setup the database -- remove??
     grapy.py            main module
@@ -82,41 +82,57 @@ Vendor plugins must return the following product details:
 #### Setup
 Prepare database:
 
-```python manage.py makemigrations```
+```
+python manage.py makemigrations
+```
 -- migrations folder is dan niet meer nodig
 
 
 Sync database:
-```python manage.py migrate```
+```
+python manage.py migrate
+```
 
 
 Create super user:
 
-```python manage.py createsuperuser --email admin@example.com --username admin```
+```
+python manage.py createsuperuser --email admin@example.com --username admin
+```
 
 
 Run tests
 
-```python -m unittest```
+```
+python -m unittest
+```
 
 
 Load data
 
-```python manage.py loaddata countries.json```
+```
+python manage.py loaddata countries.json
+```
 
 
 Start server
 
-```python manage.py runserver```
+```
+python manage.py runserver
+```
 
 
 #### Admin
 
 Update requirements.txt
 
-```pipreqs . --force```
+```
+pipreqs . --force
+```
 
 Dump data
 
-```python manage.py dumpdata wines.country > countries.json```
+```
+python manage.py dumpdata wines.country > countries.json
+```
 

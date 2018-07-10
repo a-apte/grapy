@@ -26,25 +26,13 @@ class WijnVoordeel(pluginbase.PluginBase):
                     match.group(1)))
         return res
 
-    def get_title(self, title):
-        expr = re.compile(r' \(\d+ fles(?:sen)?\)', re.I)
-        return re.sub(expr, '', title)
-
     def scrape_product(self, elt):
         """ The function to scrape the product item """
         logger.debug('scrape_product from \n{}'.format(elt))
 
-#        product = {
-#            'vendor_id': self.config['vendor_id'],
-#            'url': 'unknown',
-#            'title': 'unknown',
-#            'code': 'unknown',
-#            'quantity': 1,
-#            'volume': 0.75,
-#            'price': 0.00
-#        }
         product = self.get_base_product()
 
+        # TODO: volume??
         title = elt.select('.produkt_name')
         if title and len(title) > 0:
             product['url'] = title[0]['href']
@@ -62,8 +50,7 @@ class WijnVoordeel(pluginbase.PluginBase):
             except Exception as e:
                 logger.error(e)
 
-        product['quantity'] = self.get_quantity(product['title'])  # before title!
-        product['title'] = self.get_title(product['title'])
+        product['quantity'] = self.get_quantity(product['title'])
 
         self.config['callback'](product)
 

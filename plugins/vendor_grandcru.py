@@ -1,7 +1,6 @@
 from . import pluginbase
 import re
 import locale
-import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,34 +15,35 @@ class GrandCru(pluginbase.PluginBase):
     def get_volume(self, url):
         # TODO: do it nicely with regex
         volume = 0.75
-        if '150cl' in url or '150-cl' in url:
+        if '1-50-ltr' in url:
             volume = 1.5
-        elif '375cl' in url or '37-5cl' in url:
+        elif '0-375-ltr' in url or '0-375ltr' in url:
             volume = 0.375
-        elif '25cl' in url:
+        elif '0-25-ltr' in url:
             volume = 0.25
-        elif '20cl' in url:
+        elif '0-2-ltr' in url:
             volume = 0.2
-        elif '50cl' in url:
+        elif '0-5-ltr' in url:
             volume = 0.5
-        elif '100cl' in url:
-            volume = 1
-        elif '600cl' in url:
+        elif 'dubbele-magnum' in url or 'jeroboam' in url or '3-liter' in url:
+            volume = 3
+        elif 'magnum' in url:
+            volume = 1.5
+        elif '5-liter' in url:
+            volume = 5
+        elif '6-liter' in url or 'methusalem' in url:
             volume = 6
         return volume
 
-    def get_title(self, title):
-        expr = re.compile(r'\d{1,3}\s?cl|Magnum|2X75CL|37.5CL|37,5cl', re.I)
-        return re.sub(expr, '', title).strip()
 
-    def get_quantity(self, url):
-        # TODO: do it nicely with regex
-        quantity = 1
-        if '-2x' in url:
-            quantity = 2
-        if '-6x' in url:
-            quantity = 6
-        return quantity
+#    def get_quantity(self, url):
+#        # TODO: do it nicely with regex
+#        quantity = 1
+#        if '-2x' in url:
+#            quantity = 2
+#        if '-6x' in url:
+#            quantity = 6
+#        return quantity
 
     def scrape_product(self, elt):
         """ The function to scrape the product item """
@@ -70,10 +70,13 @@ class GrandCru(pluginbase.PluginBase):
             product['price'] = locale.atof(price[0].text.strip()[2:])
 
         idx = elt.find('span', id=re.compile('product-price'))
-        if idx['id']:
+        if idx and idx['id']:
             m = re.match('product-price-(\d+)', idx['id'])
             if m:
                 product['code'] = int(float(m.group(1)))
+
+
+#['code', 'title', 'volume', 'quantity', 'price', 'url']
 
 # 2015 Almaviva Roth­schild Puente Alto Imperiale 6 liter
 #https://www.grandcruwijnen.nl/alle-wijnen/2015-almaviva-roth-schild-puente-alto-imperiale-6-liter
@@ -82,7 +85,7 @@ class GrandCru(pluginbase.PluginBase):
 #https://www.grandcruwijnen.nl/alle-wijnen/2000-dom-perignon-champagne-brut-rose-in-golden-bottle-methusalem
 
 #        product['title'] = self.get_title(product['title'])
-#        product['volume'] = self.get_volume(product['url'])
+        product['volume'] = self.get_volume(product['url'])
 #        product['quantity'] = self.get_quantity(product['url'])
 
         self.config['callback'](product)

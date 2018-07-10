@@ -1,15 +1,8 @@
-#import csv
-#import sys
 import os
-#import re
 import json
 import logging
 import logging.config
-#import plugins
 import django
-from pprint import pformat
-from scraper import vendor, rating
-
 
 
 __version__ = '0.0.1'
@@ -25,18 +18,7 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger('grapy')
-
-
-#
-# Init complete
-#
 logger.info('Initialized {} version {}'.format(__name__, __version__))
-
-
-#python manage.py createsuperuser
-#admin
-#grapy@hugojanssen.nl
-#ww: nl-grapy123
 
 
 #
@@ -44,38 +26,43 @@ logger.info('Initialized {} version {}'.format(__name__, __version__))
 #
 logger.debug("Starting Django population script...")
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'grapy.settings')
+
 django.setup()
-
-#
-# only after django setup, we can import models
-#
-#from django.db import IntegrityError
-#from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-#from wines import models
-#
+logger.info('Django version {}'.format(django.__version__))
+logger.info('Apps ready? {} '.format(django.apps.apps.ready))
+logger.info('App name {} '.format(django.apps.apps.get_app_config('wines')))
 
 
+# do not import earlier, since Django should load first
+from scraper import vendor, wine, wine_details
 
-vd = vendor.VendorScraper()
-vd.scrape()
-
-
-rt = rating.RatingScraper()
-rt.scrape()
+# vendors
+vendor.VendorScraper().scrape()
 
 
+# wines
+import time
+for i in range(4300, 4400):
+    wine.WineScraper().scrape(i) # Amaurigue+Cotes+de+Provence+Rose
+    time.sleep(0.3)
+
+w = [3802,3726,3122,2876]
+for i in w:
+    wine.WineScraper().scrape(i) # Amaurigue+Cotes+de+Provence+Rose
 
 
-# TODO: code cleanup raters
-# TODO: validate ratings
-# TODO: get color
-# TODO: get winetype
-# TODO: implement grandcruwijnen
-# TODO: check unknowns
-# TODO: more tests
-# TODO: drf security / read only
-# ----
-# TODO: django on postgres
-# ----
-# TODO: chart price vs ratings (filter: color, min_rating_num, region, etc.)
+wine.WineScraper().scrape(4310) # Amaurigue+Cotes+de+Provence+Rose
+wine.WineScraper().scrape() # Amaurigue+Cotes+de+Provence+Rose
 
+
+# ratings
+#rating.RatingScraper().scrape(8139) # Amaurigue+Cotes+de+Provence+Rose
+#rating.RatingScraper().scrape(9080) # 94Wines #1
+for i in range(0, 250):
+    wine_details.WineDetailsScraper().scrape(i) # 94Wines #2
+    time.sleep(0.3)
+
+wine_details.WineDetailsScraper().scrape(105) # 94Wines #2
+
+
+#rating.RatingScraper().scrape()

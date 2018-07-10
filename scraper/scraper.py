@@ -81,13 +81,13 @@ class Scraper(object):
         """Scrape"""
         return
 
-    @classmethod
+    @staticmethod
     def to_csv(path, dict_data):
         if not (dict_data and len(dict_data) > 0):
             logger.error('No data to export')
             return
         try:
-            with open(path, 'w', newline='') as csvfile:
+            with open(path, 'w', newline='', encoding='utf-8') as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=dict_data[0].keys())
                 writer.writeheader()
     #            for data in dict_data:
