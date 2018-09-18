@@ -33,6 +33,9 @@ class Grape(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class WineStyle(models.Model):
     name = models.CharField(max_length=150, unique=True)
@@ -43,6 +46,9 @@ class WineStyle(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 
 class ActiveVendorManager(models.Manager):

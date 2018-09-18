@@ -161,23 +161,50 @@ class Vivino(pluginbase.PluginBase):
 
         return uri, product
 
-    def scrape_details(self, product):
-
-        soup = self.scrape_detailpage(product['url'])
-        if soup:
-            for fact in soup.select('div[class^=wineSummary__fact--]'):
-                heading = fact.select('div[class^=wineSummary__factHeading--]')[0].text.lower()
-                values = []
-                for val in fact.select('div[class^=wineSummary__factValue--]'):
-                    for ref in val.select('a'):
-                        values.append({ 'title': ref.text, 'url': '{}{}'.format(self.config['base_url'], ref['href']) })
-                product[heading] = values
+    def scrape_wine_style(self, product):
+        """ Scrape wine styles page """
+        if product['url'] and product['url'] != '':
+            soup = self.scrape_page(product['url'])
+            if soup:
+                for fact in soup.select('.characteristic'):
+                    heading = fact.select('.characteristic__name')[0].text.lower().strip()
+                    value = fact.select('.characteristic__strength')[0].text.strip()
+                    product[heading] = value
+    
+                if 'red' in product['url']:
+                    product['color'] = 'Red'
+                elif 'white' in product['url']:
+                    product['color'] = 'White'
+                else:
+                    product['color'] = 'Unknown'
+                self.config['callback'](product)
+            else:
+                logger.info('No characteristics on page {}'.format(product['url']))
         else:
-            logger.info('No products on page {}, exiting'.format(product['url']))
+            logger.info('No url to scrape {}'.format(product['url']))
 
-        self.config['callback'](product)
+
+    def scrape_details(self, product):
+        """ Scrape wine styles page """
+        if product['url'] and product['url'] != '':
+            soup = self.scrape_detailpage(product['url'])
+            if soup:
+                for fact in soup.select('div[class^=wineSummary__fact--]'):
+                    heading = fact.select('div[class^=wineSummary__factHeading--]')[0].text.lower()
+                    values = []
+                    for val in fact.select('div[class^=wineSummary__factValue--]'):
+                        for ref in val.select('a'):
+                            values.append({ 'title': ref.text, 'url': '{}{}'.format(self.config['base_url'], ref['href']) })
+                    product[heading] = values
+                self.config['callback'](product)
+            else:
+                logger.info('No products on page {}'.format(product['url']))
+        else:
+            logger.info('No url to scrape {}'.format(product['url']))
+
 
     def search_rating(self, rating):
+        """ Search a wine rating """
         logger.info('Scrape rating for {} '.format(rating['name']))
 
         uri, product = self.build_uri(rating)

@@ -34,7 +34,7 @@ logger.info('App name {} '.format(django.apps.apps.get_app_config('wines')))
 
 
 # do not import earlier, since Django should load first
-from scraper import vendor, wine, wine_details
+from scraper import vendor, wine, wine_details, wine_style
 
 # vendors
 vendor.VendorScraper().scrape()
@@ -58,11 +58,15 @@ wine.WineScraper().scrape() # Amaurigue+Cotes+de+Provence+Rose
 # ratings
 #rating.RatingScraper().scrape(8139) # Amaurigue+Cotes+de+Provence+Rose
 #rating.RatingScraper().scrape(9080) # 94Wines #1
-for i in range(0, 250):
+for i in range(200, 500):
     wine_details.WineDetailsScraper().scrape(i) # 94Wines #2
     time.sleep(0.3)
 
-wine_details.WineDetailsScraper().scrape(105) # 94Wines #2
+wine_details.WineDetailsScraper().scrape(69) # 94Wines #2
 
+for i in range(1, 100):
+    wine_style.WineStyleScraper().scrape(i) # 94Wines #2
+
+wine_style.WineStyleScraper().scrape(15) # 94Wines #2
 
 #rating.RatingScraper().scrape()
